@@ -1,0 +1,47 @@
+{
+  "name": "react-playground",
+  "description": "Create interactive coding playgrounds with preset examples",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "standalone": "Playground",
+  "homepage": "https://github.com/insin/react-playground",
+  "license": "MIT",
+  "author": "Jonny Buchanan",
+  "dependencies": {
+    "bootstrap": "^3.3.1",
+    "codemirror": "^4.8.0",
+    "react-code-mirror": "^3.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=0.12.0"
+  },
+  "devDependencies": {
+    "browserify": "^7.0.0",
+    "browserify-shim": "^3.8.1",
+    "del": "^1.1.0",
+    "gulp": "^3.8.10",
+    "gulp-header": "^1.2.2",
+    "gulp-jshint": "^1.9.0",
+    "gulp-plumber": "^0.6.6",
+    "gulp-react": "^2.0.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.0.2",
+    "gulp-util": "^3.0.1",
+    "jshint-stylish": "^1.0.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "scripts": {
+    "debug": "gulp --debug",
+    "dist": "gulp bundle-js --production",
+    "watch": "gulp"
+  },
+  "browserify-shim": {
+    "react": "global:React",
+    "react/addons": "global:React"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/insin/react-playground.git"
+  }
+}
