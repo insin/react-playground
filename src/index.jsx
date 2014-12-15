@@ -12,7 +12,7 @@ var previewKey = 1
  * @param {string|Object} doc context variable documentation.
  */
 function renderDoc(doc) {
-  if (Object.prototype.hasOwn.call(doc, '__html')) {
+  if (Object.prototype.hasOwnProperty.call(doc, '__html')) {
     return <span dangerouslySetInnerHTML={doc}/>
   }
   return doc
