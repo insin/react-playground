@@ -18,6 +18,8 @@ function renderDoc(doc) {
   return doc
 }
 
+function noop() {}
+
 var Playground = React.createClass({
   getDefaultProps() {
     return {
@@ -30,6 +32,7 @@ var Playground = React.createClass({
   getInitialState () {
     return {
       error: null
+    , evalOnChange: true
     , inputs: null
     , src: this.props.previewer.examples[0].src
     }
@@ -41,7 +44,8 @@ var Playground = React.createClass({
 
   onChange(e) {
     var src = e.target.value
-    this.setState({error: null, src}, this.evalSrc)
+    var callback = this.state.evalOnChange ? this.evalSrc : noop
+    this.setState({error: null, src}, callback)
   },
 
   onChangeExample(e) {
