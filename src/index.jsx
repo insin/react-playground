@@ -8,7 +8,7 @@ require('codemirror/mode/javascript/javascript')
 var previewKey = 1
 
 var Playground = React.createClass({
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       leadText: 'Generate interactive playgrounds with React'
     , title: 'React Playground'
@@ -16,7 +16,7 @@ var Playground = React.createClass({
     }
   },
 
-  getInitialState: function () {
+  getInitialState () {
     return {
       error: null
     , inputs: null
@@ -24,26 +24,27 @@ var Playground = React.createClass({
     }
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.evalSrc()
   },
 
-  onChange: function(e) {
+  onChange(e) {
     var src = e.target.value
-    this.setState({error: null, src: src}, this.evalSrc)
+    this.setState({error: null, src}, this.evalSrc)
   },
 
-  onChangeExample: function(e) {
+  onChangeExample(e) {
     var index = e.target.selectedIndex
-    this.setState({error: null, src: this.props.previewer.examples[index].src}, this.evalSrc)
+    var src = this.props.previewer.examples[index].src
+    this.setState({error: null, src}, this.evalSrc)
   },
 
-  evalSrc: function() {
+  evalSrc() {
     try {
-      var src = this.state.src
-      var context = this.props.previewer.context
+      var {src} = this.state
+      var {context} = this.props.previewer
       var contextArgs = Object.keys(context)
-      var contextValues = contextArgs.map(function(var_) { return context[var_] })
+      var contextValues = contextArgs.map(var_ => context[var_])
       var func = Function.apply(null, contextArgs.concat([src]))
       var result = func.apply(null, contextValues)
       previewKey++
@@ -54,9 +55,9 @@ var Playground = React.createClass({
     }
   },
 
-  render: function() {
-    var examples = this.props.previewer.examples
-    var contextDoc = this.props.previewer.contextDoc
+  render() {
+    var {src, error, input} = this.state
+    var {examples, contextDoc} = this.props.previewer
     return <div className="container">
       <div className="row header">
         <div className="col-md-12">
@@ -72,17 +73,17 @@ var Playground = React.createClass({
             <div className="form-group">
              <p><b>Examples</b></p>
              <select className="form-control" onChange={this.onChangeExample}>
-               {examples.map(function(example, index) {
-                 return <option>{index + 1}. {example.name}</option>
-               })}
+               {examples.map((example, index) => <option>
+                 {index + 1}. {example.name}
+               </option>)}
               </select>
             </div>
             <div className="form-group">
               <p><b>Context Variables</b></p>
               <ul>
-                {Object.keys(contextDoc).map(function(contextVar) {
-                  return <li><b>{contextVar}</b> &ndash; {contextDoc[contextVar]}</li>
-                })}
+                {Object.keys(contextDoc).map(var_ => <li>
+                  <strong>{var_}</strong> &ndash; {contextDoc[var_]}
+                </li>)}
               </ul>
             </div>
             <div className="form-group">
@@ -92,7 +93,7 @@ var Playground = React.createClass({
                 textAreaStyle={{minHeight: '10em'}}
                 mode="javascript"
                 theme="monokai"
-                value={this.state.src}
+                value={src}
                 lineNumbers={false}
                 lineWrapping={false}
                 smartIndent={false}
@@ -102,12 +103,12 @@ var Playground = React.createClass({
           </div>
         </div>
         <div className="col-md-6">
-          {this.state.error && <div>
+          {error && <div>
             <h3>Error!</h3>
-            <div className="alert alert-danger">{this.state.error}</div>
+            <div className="alert alert-danger">{error}</div>
           </div>}
           <h3>Preview</h3>
-          {this.state.input && <this.props.previewer key={previewKey} input={this.state.input}/>}
+          {input && <this.props.previewer key={previewKey} input={input}/>}
         </div>
       </div>
     </div>
