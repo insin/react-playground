@@ -7,6 +7,17 @@ require('codemirror/mode/javascript/javascript')
 
 var previewKey = 1
 
+/**
+ * Allow {__html: '...'} to be provided for context variable documentation.
+ * @param {string|Object} doc context variable documentation.
+ */
+function renderDoc(doc) {
+  if (Object.prototype.hasOwn.call(doc, '__html')) {
+    return <span dangerouslySetInnerHTML={doc}/>
+  }
+  return doc
+}
+
 var Playground = React.createClass({
   getDefaultProps() {
     return {
@@ -82,7 +93,7 @@ var Playground = React.createClass({
               <p><b>Context Variables</b></p>
               <ul>
                 {Object.keys(contextDoc).map(var_ => <li>
-                  <strong>{var_}</strong> &ndash; {contextDoc[var_]}
+                  <strong>{var_}</strong> &ndash; {renderDoc(contextDoc[var_])}
                 </li>)}
               </ul>
             </div>
