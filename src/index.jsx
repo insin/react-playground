@@ -5,6 +5,22 @@ var React = require('react')
 var CodeMirror = require('react-code-mirror')
 require('codemirror/mode/javascript/javascript')
 
+function cx(staticClassName, conditionalClassNames) {
+  var classNames = []
+  if (typeof conditionalClassNames == 'undefined') {
+    conditionalClassNames = staticClassName
+  }
+  else {
+    classNames.push(staticClassName)
+  }
+  for (var className in conditionalClassNames) {
+    if (!!conditionalClassNames[className]) {
+      classNames.push(className)
+    }
+  }
+  return classNames.join(' ')
+}
+
 var previewKey = 1
 
 /**
@@ -54,6 +70,10 @@ var Playground = React.createClass({
     this.setState({error: null, src}, this.evalSrc)
   },
 
+  onToggleEval(e) {
+    this.setState({evalOnChange: e.target.checked})
+  },
+
   evalSrc() {
     try {
       var {src} = this.state
@@ -71,7 +91,7 @@ var Playground = React.createClass({
   },
 
   render() {
-    var {src, error, input} = this.state
+    var {error, evalOnChange, input, src} = this.state
     var {examples, contextDoc} = this.props.previewer
     return <div className="container">
       <div className="row header">
@@ -114,6 +134,24 @@ var Playground = React.createClass({
                 smartIndent={false}
                 onChange={this.onChange}
               />
+            </div>
+            <div className="row">
+              <div className="col-sm-6">
+                <button type="button"
+                   onClick={this.evalSrc}
+                   disabled={evalOnChange}
+                   className={cx('btn btn-primary', {disabled: evalOnChange})}>
+                  Execute
+                </button>
+              </div>
+              <div className="col-sm-6">
+                <div className="checkbox pull-right">
+                  <label>
+                    <input type="checkbox" checked={evalOnChange} onClick={this.onToggleEval}/>{' '}
+                    execute automatically
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
