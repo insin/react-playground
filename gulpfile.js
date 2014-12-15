@@ -22,10 +22,6 @@ var distHeader = '/*!\n\
 var jsSrcPaths = './src/**/*.js*'
 var jsLibPaths = './lib/**/*.js'
 
-gulp.task('clean-dist', function(cb) {
-  del('./dist/*.js', cb)
-})
-
 gulp.task('clean-lib', function(cb) {
   del(jsLibPaths, cb)
 })
@@ -43,13 +39,13 @@ gulp.task('lint-js', ['transpile-js'], function() {
     .pipe(jshint.reporter('jshint-stylish'))
 })
 
-gulp.task('bundle-js', ['clean-dist', 'lint-js'], function() {
+gulp.task('bundle-js', ['lint-js'], function() {
   var b = browserify(pkg.main, {
     debug: !!gutil.env.debug
   , standalone: pkg.standalone
   , detectGlobals: false
   })
-  b.transform('browserify-shim')
+  b.transform('browserify-shim', {global: true})
 
   var stream = b.bundle()
     .pipe(source(pkg.name + '.js'))
